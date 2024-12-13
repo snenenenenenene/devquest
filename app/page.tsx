@@ -1,101 +1,105 @@
-import Image from "next/image";
+"use client"
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useProjectStore } from "@/store/use-project-store"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const router = useRouter()
+  const projects = useProjectStore((state) => state.projects)
+  const currentProjectId = useProjectStore((state) => state.currentProjectId)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (currentProjectId) {
+      router.push("/board")
+    }
+  }, [currentProjectId, router])
+
+  return (
+    <main className="min-h-screen bg-background p-8">
+      <div className="container mx-auto">
+        <h1 className="text-4xl font-bold mb-8">DevQuest</h1>
+        
+        {/* User Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Level 1</CardTitle>
+              <CardDescription>Project Manager</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-2 bg-secondary rounded-full">
+                <div className="h-2 bg-primary rounded-full w-1/3"></div>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">300/1000 XP</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Daily Streak</CardTitle>
+              <CardDescription>Keep up the momentum!</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">🔥 3 Days</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Tasks Completed</CardTitle>
+              <CardDescription>This week</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">12/15</p>
+            </CardContent>
+          </Card>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        
+        {/* Quick Actions */}
+        <div className="flex gap-4 mb-8">
+          <Button size="lg">
+            New Project
+          </Button>
+          <Button size="lg" variant="outline">
+            Create Task
+          </Button>
+        </div>
+        
+        {/* Recent Projects */}
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Recent Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Awesome Game Project</CardTitle>
+                <CardDescription>Last updated 2 hours ago</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Tasks: 8/12</span>
+                  <span>Due in 5 days</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Game Design Document</CardTitle>
+                <CardDescription>Last updated yesterday</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Tasks: 3/7</span>
+                  <span>Due in 2 weeks</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      </div>
+    </main>
+  )
 }
